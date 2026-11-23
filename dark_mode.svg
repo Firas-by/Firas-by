@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" width="985px" height="540px" font-size="14px">
+<style>
+  .ascii { fill: #c9d1d9; white-space: pre; font-size: 13px; }
+  .key { fill: #ffa657; font-weight: bold; }
+  .val { fill: #79c0ff; }
+  .dot { fill: #484f58; }
+  .head { fill: #58a6ff; font-weight: bold; }
+  .add { fill: #3fb950; }
+  .del { fill: #f85149; }
+  text, tspan { white-space: pre; }
+</style>
+<rect width="985px" height="540px" fill="#161b22" stroke="#30363d" stroke-width="1" rx="14"/>
+
+<text x="25" y="36" class="ascii">
+<tspan x="25" y="36">=**#%%@@@@@@@@@@#*##+*#@@**#*=::*%%%%*</tspan>
+<tspan x="25" y="55">-=++**##%@@@@@@@+#**%@@@@@@@@@#==+*%#+</tspan>
+<tspan x="25" y="74">*===++++*#%%@@#*+%#@@%@%*++++#@@#=-=++</tspan>
+<tspan x="25" y="93">+=+****+*++*+++#@@@@%%*:-+*====#%%+-*#</tspan>
+<tspan x="25" y="112">+*####- :+=-++**#%%@%#+*#%%##*-+##*++*</tspan>
+<tspan x="25" y="131">*+*++*. .==-+#**+**#%=*%%#*==-=##*%@%#</tspan>
+<tspan x="25" y="150">###***-==++=+*##****+=-====+=++=**##%@</tspan>
+<tspan x="25" y="169">#%@##%%%####******#===+*++*+%@%%%@@%##</tspan>
+<tspan x="25" y="188">***+#%%%%%%%%##+=+**#%*+#**++***%%%**#</tspan>
+<tspan x="25" y="207">=*#*++**##%%%*##%@%%%@++***##**#%%%%%%</tspan>
+<tspan x="25" y="226"> -#- .*##*=*#+#%%+-:::=*%%@%@%#%%%%###</tspan>
+<tspan x="25" y="245">.:+=-:**+. :*#==:       -%%%####*++##=</tspan>
+<tspan x="25" y="264">  +:.- .=:..-+.    .--=- -#=:.*+  :*+ </tspan>
+<tspan x="25" y="283">.:=:::.:=:  :+      :=++= =:. :: ..-- </tspan>
+<tspan x="25" y="302">###******+-:-+:      :. - ... ..   :-.</tspan>
+<tspan x="25" y="321">--%**@#*#%%#%%*   :: ==-= :. :=+++***#</tspan>
+<tspan x="25" y="340">  -+*:   =**+ :*     :-=:  . .*%##+=%@</tspan>
+<tspan x="25" y="359">  :=. .   +:.::     .:-*.:==.+%+=: +%+</tspan>
+<tspan x="25" y="378">  :+-. :=+*##*+     .-%@#**- .:--  -++</tspan>
+<tspan x="25" y="397">.  .+ :+#%@%%##=    .*@#%%%@- . .=   -</tspan>
+<tspan x="25" y="416">     .*##*%@@%%%*=--*%%%*%#@@= ..     </tspan>
+<tspan x="25" y="435">.. . =*#%%*@@@%%%##@@%@%#%#%%@- :.    </tspan>
+<tspan x="25" y="454">  ::-=*#%%*%@%@%%@%@@%@%#%##%%@-      </tspan>
+<tspan x="25" y="473">  .:-*##%@*#@#@@%%@@%%@#%%+#*%@@=     </tspan>
+<tspan x="25" y="492">  .:=*%@%@%#@#%@@%@@%@%#@#-+*%%@@=    </tspan>
+</text>
+<text x="390" y="36" fill="#c9d1d9">
+<tspan x="390" y="36" class="head">firas@sovereign <tspan class="dot">───────────────────────────────────</tspan></tspan>
+<tspan x="390" y="55"><tspan class="dot">. </tspan><tspan class="key">OS</tspan><tspan class="dot"> ................ </tspan><tspan class="val">Windows 11, Linux (Ubuntu), Android</tspan></tspan>
+<tspan x="390" y="74"><tspan class="dot">. </tspan><tspan class="key">Uptime</tspan><tspan class="dot"> ............ </tspan><tspan class="val">22 years (PFE Capstone Candidate)</tspan></tspan>
+<tspan x="390" y="93"><tspan class="dot">. </tspan><tspan class="key">Host</tspan><tspan class="dot"> .............. </tspan><tspan class="val">ISET Sidi Bouzid · Licence Informatique</tspan></tspan>
+<tspan x="390" y="112"><tspan class="dot">. </tspan><tspan class="key">Kernel</tspan><tspan class="dot"> ............ </tspan><tspan class="val">Applied AI &amp; Automation Developer</tspan></tspan>
+<tspan x="390" y="131"><tspan class="dot">. </tspan><tspan class="key">IDE</tspan><tspan class="dot"> ............... </tspan><tspan class="val">Antigravity, Cursor, VSCode, MetaEditor 5</tspan></tspan>
+<tspan x="390" y="150" class="dot">. </tspan>
+<tspan x="390" y="169"><tspan class="dot">. </tspan><tspan class="key">Languages.Code</tspan><tspan class="dot"> .... </tspan><tspan class="val">Python, TypeScript, JavaScript, MQL5, SQL</tspan></tspan>
+<tspan x="390" y="188"><tspan class="dot">. </tspan><tspan class="key">Languages.Web</tspan><tspan class="dot"> ..... </tspan><tspan class="val">React 19, Next.js, Tailwind, WebGL Shaders</tspan></tspan>
+<tspan x="390" y="207"><tspan class="dot">. </tspan><tspan class="key">Languages.Real</tspan><tspan class="dot"> .... </tspan><tspan class="val">Arabic (Native), French (Bilingual), English</tspan></tspan>
+<tspan x="390" y="226" class="dot">. </tspan>
+<tspan x="390" y="245"><tspan class="dot">. </tspan><tspan class="key">Focus.AI</tspan><tspan class="dot"> .......... </tspan><tspan class="val">Model Context Protocol (MCP), Evals, RAG</tspan></tspan>
+<tspan x="390" y="264"><tspan class="dot">. </tspan><tspan class="key">Focus.Quant</tspan><tspan class="dot"> ....... </tspan><tspan class="val">ZeroMQ TCP IPC (&lt;0.1ms), Risk Watchdogs</tspan></tspan>
+<tspan x="390" y="283"><tspan class="dot">. </tspan><tspan class="key">Awards</tspan><tspan class="dot"> ............ </tspan><tspan class="val">1st Place National Hackathon (Atlal 3D)</tspan></tspan>
+<tspan x="390" y="302" class="dot">. </tspan>
+<tspan x="390" y="321" class="head">- Contact Channels <tspan class="dot">───────────────────────────</tspan></tspan>
+<tspan x="390" y="340"><tspan class="dot">. </tspan><tspan class="key">Email</tspan><tspan class="dot"> ............. </tspan><tspan class="val">firasbenyacoub@gmail.com</tspan></tspan>
+<tspan x="390" y="359"><tspan class="dot">. </tspan><tspan class="key">Portfolio</tspan><tspan class="dot"> ......... </tspan><tspan class="val">firas-portfolio.firasby2002.workers.dev</tspan></tspan>
+<tspan x="390" y="378"><tspan class="dot">. </tspan><tspan class="key">Custom Domain</tspan><tspan class="dot"> ..... </tspan><tspan class="val">firas.is-a.dev (Pending Merge)</tspan></tspan>
+<tspan x="390" y="397"><tspan class="dot">. </tspan><tspan class="key">LinkedIn</tspan><tspan class="dot"> .......... </tspan><tspan class="val">linkedin.com/in/firas-ben-yacoub</tspan></tspan>
+<tspan x="390" y="416"><tspan class="dot">. </tspan><tspan class="key">GitHub</tspan><tspan class="dot"> ............ </tspan><tspan class="val">github.com/Firas-by</tspan></tspan>
+<tspan x="390" y="435" class="dot">. </tspan>
+<tspan x="390" y="454" class="head">- Verified Deliverables <tspan class="dot">──────────────────────</tspan></tspan>
+<tspan x="390" y="473"><tspan class="dot">. </tspan><tspan class="key">Traidify-Sovereign</tspan><tspan class="dot"> .. </tspan><tspan class="val">Dual-Process Python/MQL5 Gold Risk Engine</tspan></tspan>
+<tspan x="390" y="492"><tspan class="dot">. </tspan><tspan class="key">TuniBill</tspan><tspan class="dot"> .......... </tspan><tspan class="val">Tunisian Elfatoora XML/C14N Compliance Engine</tspan></tspan>
+<tspan x="390" y="511"><tspan class="dot">. </tspan><tspan class="key">Atlal-Heritage</tspan><tspan class="dot"> .... </tspan><tspan class="val">Flutter Impeller 3D Monument Viewer + RAG</tspan></tspan>
+</text>
+</svg>

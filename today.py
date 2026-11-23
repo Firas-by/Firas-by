@@ -28,7 +28,7 @@ def calculate_uptime(birthday=BIRTHDAY):
 def fetch_github_stats():
     stats = {
         'repos': 8,
-        'contrib': 9,
+        'contrib': 8,
         'stars': 0,
         'commits': 54,
         'followers': 0,
@@ -85,15 +85,15 @@ def update_svg(filename, age_str, stats):
         set_elem(elem_id, formatted_val)
         
         if total_length > 0:
-            diff = max(0, total_length - len(formatted_val))
+            diff = max(1, total_length - len(formatted_val))
             if diff <= 2:
-                dots = {0: '', 1: ' ', 2: '. '}.get(diff, ' ')
+                dots = ' . '
             else:
                 dots = ' ' + ('.' * diff) + ' '
             set_elem(f"{elem_id}_dots", dots)
 
-    # 1. Uptime
-    justify('age_data', age_str, 22)
+    # 1. Uptime - 29 total length ensures at least a couple dots
+    justify('age_data', age_str, 29)
 
     # 2. GitHub Stats
     justify('repo_data', stats['repos'], 6)
@@ -105,9 +105,23 @@ def update_svg(filename, age_str, stats):
     set_elem('loc_add', f"{stats['loc_add']:,}")
     justify('loc_del', stats['loc_del'], 6)
 
+    # Ensure no element text is None or empty to prevent self-closing tags
+    for el in root.iter():
+        if el.text is None or el.text == '':
+            el.text = ' '
+
     # Save SVG
     ET.register_namespace('', "http://www.w3.org/2000/svg")
     tree.write(filename, encoding='utf-8', xml_declaration=True)
+    
+    # Post-process to guarantee absolutely zero self-closing tspan tags
+    with open(filename, 'r', encoding='utf-8') as f:
+        content = f.read()
+    # Replace any <tspan ... /> with <tspan ...> </tspan>
+    content = re.sub(r'<tspan([^>]*)\s*/>', r'<tspan\1> </tspan>', content)
+    with open(filename, 'w', encoding='utf-8') as f:
+        f.write(content)
+
     print(f"Updated {filename} successfully.")
 
 if __name__ == '__main__':

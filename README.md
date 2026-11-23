@@ -1,8 +1,8 @@
 <div align="center">
   <a href="https://github.com/Firas-by/Firas-by">
     <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Firas-by/Firas-by/main/dark_mode.svg?v=2">
-      <img alt="Firas Ben Yacoub Terminal Profile" src="https://raw.githubusercontent.com/Firas-by/Firas-by/main/light_mode.svg?v=2" width="100%">
+      <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Firas-by/Firas-by/main/dark_mode.svg?v=3">
+      <img alt="Firas Ben Yacoub Terminal Profile" src="https://raw.githubusercontent.com/Firas-by/Firas-by/main/light_mode.svg?v=3" width="100%">
     </picture>
   </a>
 

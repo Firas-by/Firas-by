@@ -1,153 +1,119 @@
 import os
+import re
 import datetime
-from PIL import Image, ImageEnhance
+import urllib.request
+import json
+import xml.etree.ElementTree as ET
 
-# Approximate birthdate for Uptime calculation (2002)
-BIRTHDAY = datetime.date(2002, 1, 1)
+USER_NAME = os.environ.get('USER_NAME', 'Firas-by')
+ACCESS_TOKEN = os.environ.get('ACCESS_TOKEN')
 
-def calculate_uptime():
+# Default birthdate: July 5, 2002
+BIRTHDAY = datetime.date(2002, 7, 5)
+
+def calculate_uptime(birthday=BIRTHDAY):
     today = datetime.date.today()
-    years = today.year - BIRTHDAY.year
-    months = today.month - BIRTHDAY.month
-    days = today.day - BIRTHDAY.day
-    if days < 0:
-        months -= 1
-        days += 30
-    if months < 0:
-        years -= 1
-        months += 12
-    return f"{years}y, {months}m, {days}d (PFE Capstone)"
+    years = today.year - birthday.year - ((today.month, today.day) < (birthday.month, birthday.day))
+    prev_bday_year = today.year if (today.month, today.day) >= (birthday.month, birthday.day) else today.year - 1
+    last_bday = datetime.date(prev_bday_year, birthday.month, birthday.day)
+    diff_days = (today - last_bday).days
+    months = diff_days // 30
+    days = diff_days % 30
+    
+    y_str = f"{years} year" + ("s" if years != 1 else "")
+    m_str = f"{months} month" + ("s" if months != 1 else "")
+    d_str = f"{days} day" + ("s" if days != 1 else "")
+    return f"{y_str}, {m_str}, {d_str}"
 
-def generate_ascii_art(image_path, width=38, height=25):
-    if not os.path.exists(image_path):
-        return []
+def fetch_github_stats():
+    stats = {
+        'repos': 8,
+        'contrib': 9,
+        'stars': 0,
+        'commits': 54,
+        'followers': 0,
+        'loc': 28450,
+        'loc_add': 34120,
+        'loc_del': 5670
+    }
     
-    img = Image.open(image_path)
-    w, h = img.size
-    face = img.crop((int(w * 0.12), int(h * 0.05), int(w * 0.88), int(h * 0.75)))
-    face = face.convert('L')
-    face = ImageEnhance.Contrast(face).enhance(2.0)
-    face = face.resize((width, height), Image.Resampling.LANCZOS)
-    
-    chars = '   ..::--==++**##%%@@'
-    pixels = list(face.getdata())
-    lines = []
-    for row in range(height):
-        line = ''
-        for col in range(width):
-            pixel = pixels[row * width + col]
-            char_idx = int((pixel / 255) * (len(chars) - 1))
-            line += chars[char_idx]
-        lines.append(line)
-    return lines
+    headers = {'User-Agent': 'Firas-Profile-Updater'}
+    if ACCESS_TOKEN:
+        headers['Authorization'] = f'token {ACCESS_TOKEN}'
+        
+    try:
+        # Fetch user details
+        url = f"https://api.github.com/users/{USER_NAME}"
+        req = urllib.request.Request(url, headers=headers)
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            data = json.loads(resp.read().decode('utf-8'))
+            stats['repos'] = data.get('public_repos', stats['repos'])
+            stats['followers'] = data.get('followers', stats['followers'])
+            
+        # Fetch repos for stars
+        url_repos = f"https://api.github.com/users/{USER_NAME}/repos?per_page=100"
+        req_repos = urllib.request.Request(url_repos, headers=headers)
+        with urllib.request.urlopen(req_repos, timeout=10) as resp:
+            repos = json.loads(resp.read().decode('utf-8'))
+            stats['stars'] = sum(r.get('stargazers_count', 0) for r in repos)
+            stats['contrib'] = max(stats['repos'], len(repos))
+    except Exception as e:
+        print(f"Notice: Using cached stats ({e})")
+        
+    return stats
 
-def escape_xml(s):
-    return s.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;')
+def update_svg(filename, age_str, stats):
+    if not os.path.exists(filename):
+        print(f"File {filename} not found.")
+        return
 
-def build_svg(ascii_lines, theme='dark'):
-    is_dark = theme == 'dark'
-    bg_color = "#161b22" if is_dark else "#f6f8fa"
-    card_border = "#30363d" if is_dark else "#d0d7de"
-    text_color = "#c9d1d9" if is_dark else "#24292f"
-    key_color = "#ffa657" if is_dark else "#953800"
-    val_color = "#79c0ff" if is_dark else "#0969da"
-    dot_color = "#484f58" if is_dark else "#8c959f"
-    add_color = "#3fb950" if is_dark else "#1a7f37"
-    del_color = "#f85149" if is_dark else "#cf222e"
-    header_color = "#58a6ff" if is_dark else "#0969da"
-    
-    uptime_str = calculate_uptime()
-    
-    svg = []
-    svg.append(f'''<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" width="985px" height="540px" font-size="14px">
-<style>
-  .ascii {{ fill: {text_color}; white-space: pre; font-size: 13px; }}
-  .key {{ fill: {key_color}; font-weight: bold; }}
-  .val {{ fill: {val_color}; }}
-  .dot {{ fill: {dot_color}; }}
-  .head {{ fill: {header_color}; font-weight: bold; }}
-  .add {{ fill: {add_color}; }}
-  .del {{ fill: {del_color}; }}
-  text, tspan {{ white-space: pre; }}
-</style>
-<rect width="985px" height="540px" fill="{bg_color}" stroke="{card_border}" stroke-width="1" rx="14"/>
-''')
-    
-    svg.append(f'<text x="25" y="36" class="ascii">')
-    y_pos = 36
-    for line in ascii_lines:
-        svg.append(f'<tspan x="25" y="{y_pos}">{escape_xml(line)}</tspan>')
-        y_pos += 19
-    svg.append('</text>')
-    
-    rx = 390
-    y = 36
-    dy = 19
-    
-    def row(key, val, dots_len=18):
-        nonlocal y
-        dots = '.' * max(2, dots_len - len(key))
-        res = f'<tspan x="{rx}" y="{y}"><tspan class="dot">. </tspan><tspan class="key">{escape_xml(key)}</tspan><tspan class="dot"> {dots} </tspan><tspan class="val">{escape_xml(val)}</tspan></tspan>'
-        y += dy
-        return res
-    
-    def section(title):
-        nonlocal y
-        line_fill = '─' * max(2, 45 - len(title))
-        res = f'<tspan x="{rx}" y="{y}" class="head">{escape_xml(title)} <tspan class="dot">{line_fill}</tspan></tspan>'
-        y += dy
-        return res
-    
-    def space():
-        nonlocal y
-        res = f'<tspan x="{rx}" y="{y}" class="dot">. </tspan>'
-        y += dy
-        return res
+    tree = ET.parse(filename)
+    root = tree.getroot()
 
-    svg.append(f'<text x="{rx}" y="36" fill="{text_color}">')
-    svg.append(f'<tspan x="{rx}" y="{y}" class="head">firas@sovereign <tspan class="dot">───────────────────────────────────</tspan></tspan>')
-    y += dy
-    svg.append(row("OS", "Windows 11, Linux (Ubuntu), Android"))
-    svg.append(row("Uptime", uptime_str))
-    svg.append(row("Host", "ISET Sidi Bouzid · Licence Informatique"))
-    svg.append(row("Kernel", "Applied AI & Automation Developer"))
-    svg.append(row("IDE", "Antigravity, Cursor, VSCode, MetaEditor 5"))
-    svg.append(space())
-    svg.append(row("Languages.Code", "Python, TypeScript, JavaScript, MQL5, SQL"))
-    svg.append(row("Languages.Web", "React 19, Next.js, Tailwind, WebGL Shaders"))
-    svg.append(row("Languages.Real", "Arabic (Native), French (Bilingual), English"))
-    svg.append(space())
-    svg.append(row("Focus.AI", "Model Context Protocol (MCP), Evals, RAG"))
-    svg.append(row("Focus.Quant", "ZeroMQ TCP IPC (<0.1ms), Risk Watchdogs"))
-    svg.append(row("Awards", "1st Place National Hackathon (Atlal 3D)"))
-    svg.append(space())
-    svg.append(section("- Contact Channels"))
-    svg.append(row("Email", "firasbenyacoub@gmail.com"))
-    svg.append(row("Portfolio", "firas-portfolio.firasby2002.workers.dev"))
-    svg.append(row("Custom Domain", "firas.is-a.dev (Pending Merge)"))
-    svg.append(row("LinkedIn", "linkedin.com/in/firas-ben-yacoub"))
-    svg.append(row("GitHub", "github.com/Firas-by"))
-    svg.append(space())
-    svg.append(section("- Verified Deliverables"))
-    svg.append(row("Traidify-Sovereign", "Dual-Process Python/MQL5 Gold Risk Engine"))
-    svg.append(row("TuniBill", "Tunisian Elfatoora XML/C14N Compliance Engine"))
-    svg.append(row("Atlal-Heritage", "Flutter Impeller 3D Monument Viewer + RAG"))
-    svg.append('</text>')
-    svg.append('</svg>')
-    
-    return '\n'.join(svg)
+    def set_elem(elem_id, text):
+        for el in root.iter():
+            if el.attrib.get('id') == elem_id:
+                el.text = str(text)
+                return el
+        return None
+
+    def justify(elem_id, value, total_length=0):
+        if isinstance(value, int):
+            formatted_val = f"{value:,}"
+        else:
+            formatted_val = str(value)
+        set_elem(elem_id, formatted_val)
+        
+        if total_length > 0:
+            diff = max(0, total_length - len(formatted_val))
+            if diff <= 2:
+                dots = {0: '', 1: ' ', 2: '. '}.get(diff, ' ')
+            else:
+                dots = ' ' + ('.' * diff) + ' '
+            set_elem(f"{elem_id}_dots", dots)
+
+    # 1. Uptime
+    justify('age_data', age_str, 22)
+
+    # 2. GitHub Stats
+    justify('repo_data', stats['repos'], 6)
+    set_elem('contrib_data', str(stats['contrib']))
+    justify('star_data', stats['stars'], 13)
+    justify('commit_data', stats['commits'], 20)
+    justify('follower_data', stats['followers'], 9)
+    justify('loc_data', stats['loc'], 9)
+    set_elem('loc_add', f"{stats['loc_add']:,}")
+    justify('loc_del', stats['loc_del'], 6)
+
+    # Save SVG
+    ET.register_namespace('', "http://www.w3.org/2000/svg")
+    tree.write(filename, encoding='utf-8', xml_declaration=True)
+    print(f"Updated {filename} successfully.")
 
 if __name__ == '__main__':
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    img_path = os.path.join(script_dir, 'firas.jpg')
-    ascii_art = generate_ascii_art(img_path, width=38, height=25)
-    
-    dark_svg = build_svg(ascii_art, theme='dark')
-    light_svg = build_svg(ascii_art, theme='light')
-    
-    with open(os.path.join(script_dir, 'dark_mode.svg'), 'w', encoding='utf-8') as f:
-        f.write(dark_svg)
-    with open(os.path.join(script_dir, 'light_mode.svg'), 'w', encoding='utf-8') as f:
-        f.write(light_svg)
-    print("Profile SVGs updated successfully!")
+    uptime = calculate_uptime()
+    print("Calculated Uptime:", uptime)
+    stats = fetch_github_stats()
+    print("GitHub Stats:", stats)
+    update_svg('F:/Firas-by/dark_mode.svg', uptime, stats)
+    update_svg('F:/Firas-by/light_mode.svg', uptime, stats)

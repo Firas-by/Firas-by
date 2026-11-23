@@ -23,7 +23,8 @@ def calculate_uptime(birthday=BIRTHDAY):
     y_str = f"{years} year" + ("s" if years != 1 else "")
     m_str = f"{months} month" + ("s" if months != 1 else "")
     d_str = f"{days} day" + ("s" if days != 1 else "")
-    return f"{y_str}, {m_str}, {d_str}"
+    cake = " 🎂" if (today.month == birthday.month and today.day == birthday.day) else ""
+    return f"{y_str}, {m_str}, {d_str}{cake}"
 
 def fetch_github_stats():
     stats = {
@@ -57,6 +58,41 @@ def fetch_github_stats():
             repos = json.loads(resp.read().decode('utf-8'))
             stats['stars'] = sum(r.get('stargazers_count', 0) for r in repos)
             stats['contrib'] = max(stats['repos'], len(repos))
+
+        # If ACCESS_TOKEN is present, fetch GraphQL stats for accurate contributions
+        if ACCESS_TOKEN:
+            gql_query = """
+            query($login: String!) {
+              user(login: $login) {
+                contributionsCollection {
+                  totalCommitContributions
+                  restrictedContributionsCount
+                }
+                repositoriesContributedTo(first: 1) {
+                  totalCount
+                }
+              }
+            }
+            """
+            gql_req = urllib.request.Request(
+                "https://api.github.com/graphql",
+                data=json.dumps({'query': gql_query, 'variables': {'login': USER_NAME}}).encode('utf-8'),
+                headers={
+                    'Authorization': f'token {ACCESS_TOKEN}',
+                    'User-Agent': 'Firas-Profile-Updater',
+                    'Content-Type': 'application/json'
+                }
+            )
+            with urllib.request.urlopen(gql_req, timeout=10) as gql_resp:
+                gql_data = json.loads(gql_resp.read().decode('utf-8'))
+                user_data = gql_data.get('data', {}).get('user', {})
+                contrib = user_data.get('contributionsCollection', {})
+                total_commits = contrib.get('totalCommitContributions', 0) + contrib.get('restrictedContributionsCount', 0)
+                if total_commits > 0:
+                    stats['commits'] = max(stats['commits'], total_commits)
+                repos_contrib = user_data.get('repositoriesContributedTo', {}).get('totalCount', 0)
+                if repos_contrib > 0:
+                    stats['contrib'] = max(stats['contrib'], repos_contrib)
     except Exception as e:
         print(f"Notice: Using cached stats ({e})")
         
@@ -129,5 +165,9 @@ if __name__ == '__main__':
     print("Calculated Uptime:", uptime)
     stats = fetch_github_stats()
     print("GitHub Stats:", stats)
-    update_svg('F:/Firas-by/dark_mode.svg', uptime, stats)
-    update_svg('F:/Firas-by/light_mode.svg', uptime, stats)
+    
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    dark_path = os.path.join(script_dir, 'dark_mode.svg')
+    light_path = os.path.join(script_dir, 'light_mode.svg')
+    update_svg(dark_path, uptime, stats)
+    update_svg(light_path, uptime, stats)

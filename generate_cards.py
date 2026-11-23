@@ -1,7 +1,10 @@
 import subprocess, collections, os
 
+script_dir = os.path.dirname(os.path.abspath(__file__))
+ascii_path = os.path.join(script_dir, 'ascii-art.txt')
+
 # 1. Load ascii-art.txt
-with open('F:/Firas-by/ascii-art.txt', 'r', encoding='utf-8') as f:
+with open(ascii_path, 'r', encoding='utf-8') as f:
     raw_lines = [line.rstrip('\r\n') for line in f]
 
 cropped = [list(line[71:231]) for line in raw_lines[6:155]]
@@ -167,21 +170,25 @@ text, tspan {{white-space: pre;}}
 {light_right_text}
 </svg>'''
 
-with open('F:/Firas-by/dark_mode.svg', 'w', encoding='utf-8') as f:
+dark_path = os.path.join(script_dir, 'dark_mode.svg')
+light_path = os.path.join(script_dir, 'light_mode.svg')
+
+with open(dark_path, 'w', encoding='utf-8') as f:
     f.write(dark_svg)
 
-with open('F:/Firas-by/light_mode.svg', 'w', encoding='utf-8') as f:
+with open(light_path, 'w', encoding='utf-8') as f:
     f.write(light_svg)
 
 print('Generated dark_mode.svg and light_mode.svg successfully.')
 
-# Render screenshots with Edge
+# Render screenshots if browser exists
 browser_path = r'C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe'
-
-dark_shot = os.path.abspath('C:/Users/Firas/.gemini/antigravity/brain/7edd566f-f5ac-42d1-bd34-fca43348e41f/final_dark_render.png')
-light_shot = os.path.abspath('C:/Users/Firas/.gemini/antigravity/brain/7edd566f-f5ac-42d1-bd34-fca43348e41f/final_light_render.png')
-
-subprocess.run([browser_path, '--headless', f'--screenshot={dark_shot}', '--window-size=1050,600', 'file:///F:/Firas-by/dark_mode.svg'], check=True)
-subprocess.run([browser_path, '--headless', f'--screenshot={light_shot}', '--window-size=1050,600', 'file:///F:/Firas-by/light_mode.svg'], check=True)
-
-print('Rendered final_dark_render.png and final_light_render.png')
+if os.path.exists(browser_path):
+    dark_shot = os.path.join(script_dir, 'final_dark_render.png')
+    light_shot = os.path.join(script_dir, 'final_light_render.png')
+    try:
+        subprocess.run([browser_path, '--headless', f'--screenshot={dark_shot}', '--window-size=1050,600', f'file:///{dark_path.replace(os.sep, "/")}'], check=True)
+        subprocess.run([browser_path, '--headless', f'--screenshot={light_shot}', '--window-size=1050,600', f'file:///{light_path.replace(os.sep, "/")}'], check=True)
+        print('Rendered final_dark_render.png and final_light_render.png')
+    except Exception as e:
+        print(f'Notice: Browser render skipped ({e})')

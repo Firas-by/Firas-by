@@ -1,0 +1,8 @@
+__pycache__/
+*.py[cod]
+*$py.class
+final_dark_render.png
+final_light_render.png
+test_*.png
+test_*.svg
+test_*.txt

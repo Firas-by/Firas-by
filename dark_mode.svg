@@ -169,7 +169,7 @@ text, tspan {white-space: pre;}
 <text x="380" y="30" fill="#c9d1d9">
 <tspan x="380" y="30">firas@sovereign</tspan> -———————————————————————————————————————————-—-
 <tspan x="380" y="50" class="cc">. </tspan><tspan class="key">OS</tspan>:<tspan class="cc"> ........................ </tspan><tspan class="value">Windows 11, Linux (Ubuntu), Android</tspan>
-<tspan x="380" y="70" class="cc">. </tspan><tspan class="key">Uptime</tspan>:<tspan class="cc" id="age_data_dots"> . </tspan><tspan class="value" id="age_data">24 years, 4 months, 23 days</tspan>
+<tspan x="380" y="70" class="cc">. </tspan><tspan class="key">Uptime</tspan>:<tspan class="cc" id="age_data_dots"> . </tspan><tspan class="value" id="age_data">24 years, 4 months, 24 days</tspan>
 <tspan x="380" y="90" class="cc">. </tspan><tspan class="key">Host</tspan>:<tspan class="cc"> .................. </tspan><tspan class="value">ISET Sidi Bouzid (Licence Info)</tspan>
 <tspan x="380" y="110" class="cc">. </tspan><tspan class="key">Kernel</tspan>:<tspan class="cc"> ...... </tspan><tspan class="value">Applied AI &amp; Quant Systems Developer</tspan>
 <tspan x="380" y="130" class="cc">. </tspan><tspan class="key">IDE</tspan>:<tspan class="cc"> ........................ </tspan><tspan class="value">Antigravity, Cursor, VSCode, MT5</tspan>
